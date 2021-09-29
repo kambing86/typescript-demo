@@ -1,23 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import TodoItem from "./TodoItem";
+
+let id = 0;
+
+type Task = { id: number; task: string; done: boolean };
 
 function App() {
+  const [tasks, setTasks] = useState<Array<Task>>([]);
+  const [input, setInput] = useState("");
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+        {tasks.map((task) => (
+          <TodoItem
+            id={task.id}
+            task={task.task}
+            done={task.done}
+            onClick={(id) => {
+              setTasks((prev) => {
+                const selectedIndex = prev.findIndex((task) => task.id === id);
+                if (selectedIndex >= 0) {
+                  const oldTask = prev[selectedIndex];
+                  const newTask: Task = { ...oldTask, done: true };
+                  return [
+                    ...prev.slice(0, selectedIndex),
+                    newTask,
+                    ...prev.slice(selectedIndex + 1),
+                  ];
+                }
+                return prev;
+              });
+            }}
+          />
+        ))}
+        <input
+          value={input}
+          onChange={(event) => {
+            const inputValue = event.target.value;
+            setInput(inputValue);
+          }}
+        />
+        <button
+          onClick={() => {
+            const newId = ++id;
+            setTasks((prev) => [
+              ...prev,
+              { id: newId, task: input, done: false },
+            ]);
+            setInput("");
+          }}
         >
-          Learn React
-        </a>
+          Add Task
+        </button>
       </header>
     </div>
   );
