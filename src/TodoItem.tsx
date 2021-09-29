@@ -1,20 +1,22 @@
 import { memo } from "react";
 
 interface Props {
-  id: number;
-  task: string;
-  done: boolean;
+  task: {
+    id: number;
+    desc: string;
+    done: boolean;
+  };
   onClick: (id: number, event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const TodoItem = ({ id, task, done, onClick }: Props) => {
+const TodoItem = ({ task, onClick }: Props) => {
   return (
     <div>
-      <div>ID: {id}</div>
-      <div>Task: {task}</div>
-      <div>Done: {String(done)}</div>
-      {!done && (
-        <button onClick={(event) => onClick(id, event)}>Mark done</button>
+      <div>ID: {task.id}</div>
+      <div>Task: {task.desc}</div>
+      <div>Done: {String(task.done)}</div>
+      {!task.done && (
+        <button onClick={(event) => onClick(task.id, event)}>Mark done</button>
       )}
     </div>
   );

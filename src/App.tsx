@@ -4,7 +4,7 @@ import TodoItem from "./TodoItem";
 
 let id = 0;
 
-type Task = { id: number; task: string; done: boolean };
+type Task = { id: number; desc: string; done: boolean };
 
 function App() {
   const [tasks, setTasks] = useState<Array<Task>>([]);
@@ -14,9 +14,7 @@ function App() {
       <header className="App-header">
         {tasks.map((task) => (
           <TodoItem
-            id={task.id}
-            task={task.task}
-            done={task.done}
+            task={task}
             onClick={(id) => {
               setTasks((prev) => {
                 const selectedIndex = prev.findIndex((task) => task.id === id);
@@ -46,7 +44,7 @@ function App() {
             const newId = ++id;
             setTasks((prev) => [
               ...prev,
-              { id: newId, task: input, done: false },
+              { id: newId, desc: input, done: false },
             ]);
             setInput("");
           }}
