@@ -1,10 +1,7 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import "./App.css";
-import TodoItem from "./TodoItem";
-
-let id = 0;
-
-type Task = { id: number; desc: string; done: boolean };
+import TodoItem, { Task } from "./TodoItem";
 
 function App() {
   const [tasks, setTasks] = useState<Array<Task>>([]);
@@ -15,7 +12,7 @@ function App() {
         {tasks.map((task) => (
           <TodoItem
             task={task}
-            onClick={(id) => {
+            onClickDone={(id) => {
               setTasks((prev) => {
                 const selectedIndex = prev.findIndex((task) => task.id === id);
                 if (selectedIndex >= 0) {
@@ -24,6 +21,18 @@ function App() {
                   return [
                     ...prev.slice(0, selectedIndex),
                     newTask,
+                    ...prev.slice(selectedIndex + 1),
+                  ];
+                }
+                return prev;
+              });
+            }}
+            onClickDelete={(id) => {
+              setTasks((prev) => {
+                const selectedIndex = prev.findIndex((task) => task.id === id);
+                if (selectedIndex >= 0) {
+                  return [
+                    ...prev.slice(0, selectedIndex),
                     ...prev.slice(selectedIndex + 1),
                   ];
                 }
@@ -41,10 +50,9 @@ function App() {
         />
         <button
           onClick={() => {
-            const newId = ++id;
             setTasks((prev) => [
               ...prev,
-              { id: newId, desc: input, done: false },
+              { id: uuidv4(), desc: input, done: false },
             ]);
             setInput("");
           }}
